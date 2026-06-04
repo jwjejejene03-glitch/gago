@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heart of Love 💕</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Bubblegum Sans', 'Comic Sans MS', cursive;
+    overflow: hidden;
+  }
+
+  .canvas {
+    position: relative;
+    width: 560px;
+    height: 340px;
+    background: #fff8fa;
+    overflow: hidden;
+    border-radius: 22px;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.45);
+  }
+
+  /* ===== HEART GRID ===== */
+  .heart-wrap {
+    position: absolute;
+    top: 50%;
+    left: 55%;
+    transform: translate(-50%, -52%);
+  }
+
+  .love {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .love .row {
+    display: flex;
+    gap: 1px;
+    justify-content: center;
+  }
+
+  .love .block {
+    width: 13px;
+    height: 13px;
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(0);
+    flex-shrink: 0;
+  }
+
+  .love .block.spacer {
+    background: transparent;
+    visibility: visible;
+    opacity: 0;
+  }
+
+  .love .block.show {
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+
+  .love .block div {
+    width: 13px;
+    height: 13px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 90'%3E%3Cpath fill='%23e8001d' d='M50 85 L5 35 Q0 20 10 10 Q25 0 40 10 L50 20 L60 10 Q75 0 90 10 Q100 20 95 35 Z'/%3E%3C/svg%3E") no-repeat center;
+    background-size: contain;
+    filter: drop-shadow(0 1px 2px rgba(180,0,0,0.4));
+    animation: heartPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes heartPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.09); }
+  }
+
+  /* ===== CHARACTER (KITTEN) ===== */
+  .character {
+    position: absolute;
+    bottom: 18px;
+    left: 18px;
+    animation: bounce 0.6s ease-in-out infinite alternate;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  @keyframes bounce {
+    from { transform: translateY(0) rotate(-1deg); }
+    to   { transform: translateY(-6px) rotate(1deg); }
+  }
+
+  .kitten-svg {
+    width: 78px;
+    height: 95px;
+    filter: drop-shadow(2px 3px 6px rgba(0,0,0,0.18));
+  }
+
+  .biu-text {
+    position: absolute;
+    top: 20px;
+    left: 64px;
+    font-size: 11px;
+    color: #e05080;
+    font-style: italic;
+    font-weight: bold;
+    opacity: 0;
+    animation: biuFloat 1.2s ease-in-out infinite;
+    white-space: nowrap;
+  }
+
+  .biu-heart {
+    position: absolute;
+    top: 10px;
+    left: 58px;
+    font-size: 13px;
+    opacity: 0;
+    animation: biuFloat 1.2s ease-in-out 0.3s infinite;
+  }
+
+  @keyframes biuFloat {
+    0%,100% { opacity: 0; transform: translateY(0) scale(0.7); }
+    40%, 60% { opacity: 1; transform: translateY(-7px) scale(1.1); }
+  }
+
+  /* ===== BADING TEXT ===== */
+  .bading-text {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    font-size: 13px;
+    font-weight: 900;
+    color: #ff1493;
+    text-shadow:
+      2px 2px 0 #ff69b4,
+      -1px -1px 0 #c0006a,
+      0 0 18px #ff69b4;
+    letter-spacing: 3px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .bading-text.show {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    animation: badingBounce 0.6s ease-in-out infinite alternate;
+  }
+
+  @keyframes badingBounce {
+    from { transform: translateX(-50%) rotate(-2deg) scale(1); }
+    to   { transform: translateX(-50%) rotate(2deg) scale(1.06); }
+  }
+
+  /* ===== FLYING HEARTS ===== */
+  .fheart {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 90'%3E%3Cpath fill='%23ff69b4' d='M50 85 L5 35 Q0 20 10 10 Q25 0 40 10 L50 20 L60 10 Q75 0 90 10 Q100 20 95 35 Z'/%3E%3C/svg%3E") no-repeat center / contain;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  /* ===== SPARKLES ===== */
+  .sparkle {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    animation: sparkleAnim 1.4s ease-in-out infinite;
+  }
+  .sparkle::before { content: '✦'; font-size: 14px; color: #ff69b4; }
+  @keyframes sparkleAnim {
+    0%   { opacity: 0; transform: scale(0) rotate(0deg); }
+    50%  { opacity: 1; transform: scale(1.3) rotate(180deg); }
+    100% { opacity: 0; transform: scale(0) rotate(360deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="canvas" id="canvas">
+
+  <!-- Heart Grid -->
+  <div class="heart-wrap">
+    <div class="love" id="loveGrid"></div>
+  </div>
+
+  <!-- Kitten Character -->
+  <div class="character" id="char">
+    <div style="position:relative;">
+      <span class="biu-heart">💕</span>
+      <span class="biu-text">biu~</span>
+      <!-- Cute orange kitten SVG -->
+      <svg class="kitten-svg" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ears -->
+        <polygon points="15,28 22,10 30,28" fill="#e8924a"/>
+        <polygon points="18,28 22,15 28,28" fill="#f5c9a0"/>
+        <polygon points="50,28 58,10 65,28" fill="#e8924a"/>
+        <polygon points="52,28 58,15 63,28" fill="#f5c9a0"/>
+        <!-- Head -->
+        <ellipse cx="40" cy="36" rx="24" ry="22" fill="#e8924a"/>
+        <!-- Head stripes -->
+        <path d="M32 16 Q40 12 48 16" stroke="#c97530" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <path d="M35 13 Q40 10 45 13" stroke="#c97530" stroke-width="1.2" fill="none" opacity="0.5"/>
+        <!-- Face white patch -->
+        <ellipse cx="40" cy="40" rx="14" ry="12" fill="#f5e6d0"/>
+        <!-- Eyes - big black with shine -->
+        <ellipse cx="32" cy="33" rx="5" ry="5.5" fill="#1a1a1a"/>
+        <ellipse cx="48" cy="33" rx="5" ry="5.5" fill="#1a1a1a"/>
+        <circle cx="34" cy="31" r="1.5" fill="white"/>
+        <circle cx="50" cy="31" r="1.5" fill="white"/>
+        <!-- Nose -->
+        <ellipse cx="40" cy="41" rx="3" ry="2" fill="#e87a8a"/>
+        <!-- Mouth -->
+        <path d="M37 43 Q40 46 43 43" stroke="#c06070" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Whiskers left -->
+        <line x1="16" y1="40" x2="33" y2="41" stroke="#888" stroke-width="1" opacity="0.7"/>
+        <line x1="16" y1="43" x2="33" y2="43" stroke="#888" stroke-width="1" opacity="0.7"/>
+        <!-- Whiskers right -->
+        <line x1="47" y1="41" x2="64" y2="40" stroke="#888" stroke-width="1" opacity="0.7"/>
+        <line x1="47" y1="43" x2="64" y2="43" stroke="#888" stroke-width="1" opacity="0.7"/>
+        <!-- Blush cheeks -->
+        <ellipse cx="26" cy="43" rx="5" ry="3" fill="#ffb3c6" opacity="0.55"/>
+        <ellipse cx="54" cy="43" rx="5" ry="3" fill="#ffb3c6" opacity="0.55"/>
+        <!-- Body -->
+        <ellipse cx="40" cy="72" rx="18" ry="20" fill="#e8924a"/>
+        <!-- Tummy -->
+        <ellipse cx="40" cy="74" rx="10" ry="13" fill="#f5e6d0"/>
+        <!-- Body stripes -->
+        <path d="M24 65 Q22 72 24 79" stroke="#c97530" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <path d="M56 65 Q58 72 56 79" stroke="#c97530" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <!-- Arms up / paws tucked in front -->
+        <ellipse cx="26" cy="80" rx="7" ry="5" fill="#e8924a"/>
+        <ellipse cx="54" cy="80" rx="7" ry="5" fill="#e8924a"/>
+        <!-- Paw toes left -->
+        <circle cx="22" cy="82" r="2" fill="#f5c9a0"/>
+        <circle cx="26" cy="84" r="2" fill="#f5c9a0"/>
+        <circle cx="30" cy="82" r="2" fill="#f5c9a0"/>
+        <!-- Paw toes right -->
+        <circle cx="50" cy="82" r="2" fill="#f5c9a0"/>
+        <circle cx="54" cy="84" r="2" fill="#f5c9a0"/>
+        <circle cx="58" cy="82" r="2" fill="#f5c9a0"/>
+        <!-- Tail -->
+        <path d="M58 85 Q78 80 72 65 Q68 55 74 50" stroke="#e8924a" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <!-- Feet at bottom -->
+        <ellipse cx="33" cy="92" rx="6" ry="4" fill="#e8924a"/>
+        <ellipse cx="47" cy="92" rx="6" ry="4" fill="#e8924a"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="bading-text" id="badingText">Bading yarn 💕</div>
+
+</div>
+
+<script>
+  const pattern = [
+    [0,0,1,1,0,0,0,1,1,0,0],
+    [0,1,1,1,1,0,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [0,1,1,1,1,1,1,1,1,1,0],
+    [0,0,1,1,1,1,1,1,1,0,0],
+    [0,0,0,1,1,1,1,1,0,0,0],
+    [0,0,0,0,1,1,1,0,0,0,0],
+    [0,0,0,0,0,1,0,0,0,0,0],
+  ];
+
+  const grid = document.getElementById('loveGrid');
+  const allBlocks = [];
+
+  pattern.forEach(row => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'row';
+    row.forEach(cell => {
+      const block = document.createElement('div');
+      block.className = 'block' + (cell === 0 ? ' spacer' : '');
+      if (cell === 1) {
+        const inner = document.createElement('div');
+        block.appendChild(inner);
+        allBlocks.push(block);
+      }
+      rowEl.appendChild(block);
+    });
+    grid.appendChild(rowEl);
+  });
+
+  const shuffled = [...allBlocks].sort(() => Math.random() - 0.5);
+  shuffled.forEach((block, i) => {
+    setTimeout(() => {
+      block.classList.add('show');
+      if (i === shuffled.length - 1) {
+        setTimeout(() => {
+          document.getElementById('badingText').classList.add('show');
+          spawnSparkles();
+        }, 400);
+      }
+    }, i * 40 + 300);
+  });
+
+  function spawnFlyingHeart() {
+    const canvas = document.getElementById('canvas');
+    const fh = document.createElement('div');
+    fh.className = 'fheart';
+    const startX = 90 + Math.random() * 10;
+    const startY = canvas.offsetHeight - 80 + Math.random() * 10;
+    fh.style.left = startX + 'px';
+    fh.style.top = startY + 'px';
+    canvas.appendChild(fh);
+
+    const targetX = 160 + Math.random() * 80;
+    const targetY = 60 + Math.random() * 80;
+    const dur = 900 + Math.random() * 400;
+
+    fh.animate([
+      { opacity: 0, transform: 'scale(0.5) translate(0,0)' },
+      { opacity: 1, transform: `scale(1.2) translate(${(targetX-startX)*0.5}px, ${(targetY-startY)*0.5}px)` },
+      { opacity: 0, transform: `scale(0.6) translate(${targetX-startX}px, ${targetY-startY}px)` }
+    ], { duration: dur, easing: 'ease-out', fill: 'forwards' }).onfinish = () => fh.remove();
+  }
+
+  setInterval(spawnFlyingHeart, 350);
+
+  function spawnSparkles() {
+    const positions = [
+      {top:'15%',left:'45%',delay:'0s'},{top:'10%',left:'70%',delay:'0.4s'},
+      {top:'30%',left:'85%',delay:'0.8s'},{top:'55%',left:'88%',delay:'0.2s'},
+      {top:'20%',left:'60%',delay:'1s'},
+    ];
+    positions.forEach(p => {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      s.style.top = p.top;
+      s.style.left = p.left;
+      s.style.animationDelay = p.delay;
+      document.getElementById('canvas').appendChild(s);
+    });
+  }
+</script>
+</body>
+</html>
